@@ -58,7 +58,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
 
 
   static List<String> _widetTitle = <String>[
-    "Profile",
+    "Dashboard",
     "Orders Report",
     "Orders",
     "Service"
@@ -521,12 +521,8 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
         selectedItemColor: Colors.black45, // Selected icon color
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.document_scanner_rounded),
-            label: 'Report',
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.ac_unit),
@@ -535,6 +531,10 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.design_services),
             label: 'Service',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.document_scanner_rounded),
+            label: 'Report',
           ),
         ],
         currentIndex: _selectedIndex,
