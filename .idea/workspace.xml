@@ -5,7 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dcdc4f6e-66bb-4e50-8cfd-25863eecc1e1" name="Changes" comment="Initial Commit">
+      <change afterPath="$PROJECT_DIR$/assets/images/help.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/sos.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/category/shop_focus_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/chat/chat_request.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/chat/chat_response.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/main/main_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/model/notification/admin_notification_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/page/chat/order_chat_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/page/dashboard/main/main_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/page/dashboard/notifications/notification_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/.filecache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/app.dill" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/debug_android_application.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/flutter_assets.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/gen_dart_plugin_registrant.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/gen_localizations.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/kernel_snapshot.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/kernel_snapshot.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/native_assets.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/native_assets.stamp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/native_assets.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/0f8232741df8b9ea945fd47921447aa9/outputs.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config_subset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/4square-driver.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/4square-driver.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants/api_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/controller/home_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controller/home_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/controller/order_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controller/order_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/login/login_response.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/login/login_response.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/notification/notification_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/notification/notification_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/model/order/order_response.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/order/order_response.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/navigation/page_navigation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/navigation/page_navigation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/network/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/network/api_service.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/page/dashboard/dashboard_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/dashboard/dashboard_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/page/dashboard/order/order_details_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/dashboard/order/order_details_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/page/dashboard/order/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/dashboard/order/order_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/page/dashboard/profile/profile_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/dashboard/profile/profile_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,13 +57,26 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "ragu92pvl"
+  }
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/microragu/4square-driver.git",
-    "accountId": "fb24ef28-bcc5-48f4-ab83-d7f049d436c7"
+    "accountId": "41db6e68-89f5-4747-8e9a-f936076fe199"
   }
 }]]></component>
   <component name="ProjectColorInfo">{
@@ -46,11 +101,20 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Projects/Qads/4square/4square-driver",
+    "last_opened_file_path": "/Users/qads/Documents/Raguram/Projects/MultiProjects/4square new/git/4square-driver/android/app",
     "settings.editor.selected.configurable": "flutter.settings",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/android/app" />
+      <recent name="$PROJECT_DIR$/android" />
+      <recent name="$PROJECT_DIR$/lib/model" />
+      <recent name="$PROJECT_DIR$/lib/page" />
+      <recent name="$PROJECT_DIR$/assets/images" />
+    </key>
+  </component>
   <component name="RunManager" selected="Flutter.main.dart">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
@@ -116,5 +180,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/page/dashboard/service/service_page.dart</url>
+          <line>66</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

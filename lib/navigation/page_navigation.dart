@@ -1,6 +1,9 @@
 import 'package:driver/model/service/service_response_model.dart';
+import 'package:driver/page/chat/order_chat_page.dart';
 import 'package:driver/page/dashboard/dashboard_page.dart';
+import 'package:driver/page/dashboard/notifications/notification_page.dart';
 import 'package:driver/page/dashboard/order/order_details_page.dart';
+import 'package:driver/page/dashboard/profile/profile_page.dart';
 import 'package:driver/page/dashboard/service/service_details_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +40,34 @@ class PageNavigation{
       ),
     );
   }
+
+  static gotoProfilePage(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfilePage(),
+      ),
+    );
+  }
+
+  static gotoChatPage(BuildContext context,String orderId,String type,String sender){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderChatPage(orderId, type,sender),
+      ),
+    );
+  }
+
+  static gotoNotificationPage(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NotificationPage(),
+      ),
+    );
+  }
+
 
   static gotoServiceDetailsPage(BuildContext context, Service serviceBean){
     Navigator.push(

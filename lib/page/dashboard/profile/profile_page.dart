@@ -54,6 +54,15 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.themeColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text("Profile",style: TextStyle(color: Colors.white,fontFamily: AppStyle.robotoRegular,fontSize: 16),),
+        centerTitle: true,
+      ),
       backgroundColor: AppColors.themeColor,
       body: Stack(
         children: [

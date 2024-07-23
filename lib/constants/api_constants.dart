@@ -19,5 +19,9 @@ class ApiConstants{
   static var orderReject = BASE_URL+"orderReject/";
   static var updateLocation = BASE_URL+"updateLocation/";
   static var getOrderNotification = BASE_URL+"getOrderNotification/";
-
+  static var listChat = BASE_URL+"listChat/";
+  static var addChat = BASE_URL+"addChat";
+  static var saletodayReport = BASE_URL+"saletodayReport/";
+  static var getShopFocus = BASE_URL+"getShopFocus/";
+  static var getNotifications = BASE_URL+"getNotifications";
 }

@@ -5,10 +5,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constants/api_constants.dart';
 import 'package:driver/flutter_flow/flutter_flow_theme.dart';
+import 'package:driver/navigation/page_navigation.dart';
 import 'package:driver/utils/tracking_utils.dart';
 import 'package:driver/utils/validation_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -245,9 +247,29 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                                     SizedBox(height: 10,),
                                     Row(
                                       children: [
-                                        Icon(Icons.call,color: AppColors.themeColor,),
-                                        SizedBox(width: 5,),
-                                        Text("Click to Call",style: AppStyle.font14RegularBlack87.override(color: Colors.black,fontSize: 14),),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Icon(Icons.call,color: AppColors.themeColor,),
+                                              ),
+                                              onTap: (){
+                                                FlutterPhoneDirectCaller.callNumber(widget.orderDetails.address!.phone!);
+                                              },
+                                            ),
+                                            SizedBox(width: 5,),
+                                            InkWell(
+                                              onTap: (){
+                                                PageNavigation.gotoChatPage(context,widget.orderDetails.saleCode!,"driver","user");
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Icon(Icons.chat,color: AppColors.themeColor,),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -296,11 +318,19 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                                     SizedBox(height: 10,),
                                     Row(
                                       children: [
-                                        Icon(Icons.call,color: AppColors.themeColor,),
-                                        SizedBox(width: 5,),
-                                        Text("Click to Call",style: AppStyle.font14RegularBlack87.override(color: Colors.black,fontSize: 14),),
+                                        InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(Icons.call,color: AppColors.themeColor,),
+                                          ),
+                                          onTap: (){
+                                            FlutterPhoneDirectCaller.callNumber(widget.orderDetails.vendor!.phone!);
+                                          },
+                                        ),
+
                                       ],
                                     ),
+
                                   ],
                                 ),
                                 Positioned(right: 0,
@@ -454,8 +484,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
 
               widget.orderDetails.deliveryState == "on_reached" ? InkWell(
                 onTap: (){
-                  TrackingUtils.startTracking(widget.orderDetails.saleCode!);
-                  _con.changeOrderStatus(widget.orderDetails.saleCode!, "on_finish", context);
+                  showConfirmationBottomSheet(context);
                 },
                 child: Container(
                   width: 138,
@@ -474,6 +503,93 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void showConfirmationBottomSheet(BuildContext context) {
+    var otpController = TextEditingController();
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            height: 250,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(
+                  'Please enter the otp',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20,),
+                Container(
+                  height: 52,
+                  child: TextFormField(
+                    controller: otpController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.themeLightColor, // Gray fill color
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            color: AppColors.themeColor,
+                            width: 1.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            color: AppColors.themeColor,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            color: AppColors.themeColor,
+                            width: 1.0,
+                          ),
+                        ),
+                        hintText: 'Enter 4 digit otp',
+                        hintStyle: AppStyle.font14MediumBlack87.override(color: Colors.black)
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20,),
+                InkWell(
+                  onTap: (){
+                    if(otpController.text ==widget.orderDetails.otp){
+                      TrackingUtils.startTracking(widget.orderDetails.saleCode!);
+                      _con.changeOrderStatus(widget.orderDetails.saleCode!, "on_finish", context);
+                    }else{
+                      ValidationUtils.showAppToast("Invalid OTP");
+                    }
+                  },
+                  child: Container(
+                    width: 138,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppColors.themeColor, // Gray fill color
+                      borderRadius: BorderRadius.circular(15.0), // Rounded corners
+                    ),
+                    child: Center(
+                      child:   Text("Submit",style: AppStyle.font14MediumBlack87.override(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

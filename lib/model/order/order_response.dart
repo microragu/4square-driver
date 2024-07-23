@@ -34,11 +34,13 @@ class OrderDetails {
   PaymentDetails? paymentDetails;
   Address? address;
   String? shipping;
+  String? otp;
   String? paymentType;
   String? paymentStatus;
   String? paymentTimestamp;
   String? grandTotal;
   String? saleDatetime;
+  String? orderType;
   String? delivaryDatetime;
   Null? deliverAssignedtime;
   String? deliveryState;
@@ -61,10 +63,11 @@ class OrderDetails {
         this.deliverAssignedtime,
         this.deliveryState,
         this.driverCharge,
-        this.vendor});
+        this.vendor,this.otp,this.orderType});
 
   OrderDetails.fromJson(Map<String, dynamic> json) {
     userid = json['userid'];
+    otp = json['otp'];
     saleCode = json['sale_code'];
     if (json['product_details'] != null) {
       productDetails = <ProductDetails>[];
@@ -79,6 +82,7 @@ class OrderDetails {
     json['address'] != null ? new Address.fromJson(json['address']) : null;
     shipping = json['shipping'];
     paymentType = json['payment_type'];
+    orderType = json['order_type'];
     paymentStatus = json['payment_status'];
     paymentTimestamp = json['payment_timestamp'];
     grandTotal = json['grand_total'];

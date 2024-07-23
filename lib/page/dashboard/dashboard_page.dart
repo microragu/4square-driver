@@ -7,7 +7,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:driver/constants/app_style.dart';
 import 'package:driver/flutter_flow/flutter_flow_theme.dart';
 import 'package:driver/model/notification/notification_model.dart';
+import 'package:driver/navigation/page_navigation.dart';
 import 'package:driver/page/dashboard/home/home_page.dart';
+import 'package:driver/page/dashboard/main/main_page.dart';
 import 'package:driver/page/dashboard/order/order_page.dart';
 import 'package:driver/page/dashboard/profile/profile_page.dart';
 import 'package:driver/page/dashboard/report/report_page.dart';
@@ -46,13 +48,13 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
   var firebaseOrderResponse = FirebaseOrderResponse();
   int _selectedIndex = 1;
   String title = "Profile";
-  var icon = Icon(Icons.person,color: Colors.white,);
+  var icon = Icon(Icons.person,color: Colors.white,size: 24,);
   late final FirebaseMessaging _firebaseMessaging;
   static List<Widget> _widgetOptions = <Widget>[
-    ProfilePage(),
-    ReportPage(),
+    MainPage(),
     OrderPage(),
-    ServicePage()
+    ServicePage(),
+    ReportPage()
   ];
   String _selectedItem = 'Select Reasons';
 
@@ -66,10 +68,10 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
 
   static List<Icon> _widetIcons = <Icon>[
     Icon(Icons.person,color: Colors.white,),
-    Icon(Icons.dashboard,color: Colors.white,),
-    Icon(Icons.document_scanner,color: Colors.white,),
-    Icon(Icons.ac_unit,color: Colors.white,),
-    Icon(Icons.design_services_outlined,color: Colors.white,),
+    Icon(Icons.person,color: Colors.white,),
+    Icon(Icons.person,color: Colors.white,),
+    Icon(Icons.person,color: Colors.white,),
+    Icon(Icons.person,color: Colors.white,),
   ];
 
   int _remainingTime = 30;
@@ -312,7 +314,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
           insetPadding: EdgeInsets.all(10),
           child: Container(
             width: double.infinity,
-            height: 350,
+            height: 450,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
@@ -358,7 +360,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                   Image.asset("assets/images/received.png",height: 80,width: 80,),
                   SizedBox(height: 10,),
                   Text(
-                    "Shop Name:#${value.data![0].shopName}",
+                    "Shop Name:${value.data![0].shopName}",
                     maxLines: 1,overflow: TextOverflow.ellipsis,
                     style: AppStyle.font14MediumBlack87.override(fontSize: 16),
                   ),
@@ -367,7 +369,46 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                     "Order ID:#${firebaseOrderResponse.orderid}",
                     style: AppStyle.font14MediumBlack87.override(fontSize: 16),
                   ),
+
                   SizedBox(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Background color
+                        borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                        border: Border.all(
+                          color: Colors.grey.shade300, // Light gray border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Delivery Address:",
+                                  style: AppStyle.font14MediumBlack87.override(fontSize: 15),
+                                ),
+                                SizedBox(height: 2,),
+                                Text(value.data![0].shippingAddress!.addressSelect!,style: AppStyle.font14RegularBlack87.override(color: Colors.black,fontSize: 14),),
+                                SizedBox(height: 10,),
+                              ],
+                            ),
+                            // Positioned(right: 0,
+                            //     top: 0,
+                            //     bottom: 0,
+                            //     child: InkWell(
+                            //         onTap: (){
+                            //           ValidationUtils.openGoogleMap(value.data![0].shippingAddress!.latitude!,value.data![0].shippingAddress!.longitude!);
+                            //         },
+                            //         child: Image.asset("assets/images/map.png"))),
+                          ],
+                        ),
+                      )),
+                  SizedBox(height: 20,),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -487,13 +528,30 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
           },
           child: Row(
             children: [
-              icon,
+              InkWell(
+                onTap: (){
+                  PageNavigation.gotoProfilePage(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: icon,
+                ),
+              ),
               SizedBox(width: 5,),
               Text(title,style: AppStyle.font14MediumBlack87.override(color: Colors.white,fontSize: 18),),
             ],
           ),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: (){
+                PageNavigation.gotoNotificationPage(context);
+              },
+                child: Icon(Icons.notifications_active,color: Colors.white,)),
+          ),
+          SizedBox(width: 5,),
           Switch.adaptive(
             value: _con.driverStatus,
             onChanged: (newValue) async {

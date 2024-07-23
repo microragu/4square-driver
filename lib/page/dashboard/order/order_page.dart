@@ -29,13 +29,17 @@ class _OrderPageState extends StateMVC<OrderPage> {
   }
 
   String _selectedItem = 'All';
+  String shopFocusId = "0";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _con.listAllOrders("");
+    _con.listAllOrders("0",shopFocusId);
+    _con.getShopFocus(context);
   }
+
+  int _selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,52 @@ class _OrderPageState extends StateMVC<OrderPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              _con.shopFocusModel.data!=null ? Container(
+                height: 40,
+                child: ListView.builder(
+                  itemCount: _con.shopFocusModel.data!.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    var shopBean =  _con.shopFocusModel.data![index];
+                    bool isSelected = index == _selectedIndex;
+                    return  !shopBean.title!.toLowerCase().contains("service") ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = index;
+                          shopFocusId = shopBean.shopFocusId!;
+                          if(_selectedItem == "All") {
+                            _con.listAllOrders("0",shopFocusId);
+                          }else if(_selectedItem == "On Preparing"){
+                            _con.listAllOrders("on_going",shopFocusId);
+                          }else if(_selectedItem == "On Ready"){
+                            _con.listAllOrders("on_ready",shopFocusId);
+                          }else if(_selectedItem == "On Finish"){
+                            _con.listAllOrders("on_finish",shopFocusId);
+                          }
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 100,
+                          padding: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            color: isSelected ? Colors.red : Colors.green, // Highlight selected item
+                            borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                          ),
+                          child: Center(
+                            child: Text(
+                              shopBean.title!,
+                              style: TextStyle(fontSize: 12, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Container();
+                  },
+                ),
+              ):Container(),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -64,13 +114,13 @@ class _OrderPageState extends StateMVC<OrderPage> {
                       setState(() {
                         _selectedItem = newValue!;
                         if(newValue == "All") {
-                          _con.listAllOrders("");
+                          _con.listAllOrders("0",shopFocusId);
                         }else if(newValue == "On Preparing"){
-                          _con.listAllOrders("on_going");
+                          _con.listAllOrders("on_going",shopFocusId);
                         }else if(newValue == "On Ready"){
-                          _con.listAllOrders("on_ready");
+                          _con.listAllOrders("on_ready",shopFocusId);
                         }else if(newValue == "On Finish"){
-                          _con.listAllOrders("on_finish");
+                          _con.listAllOrders("on_finish",shopFocusId);
                         }
                       });
                     },
@@ -113,7 +163,7 @@ class _OrderPageState extends StateMVC<OrderPage> {
                               builder: (context) => OrderDetailsPage(orderBean),
                             ),
                           ).then((value){
-                            _con.listAllOrders("");
+                            _con.listAllOrders("0",shopFocusId);
                           });
                         },
                         child: Stack(
@@ -138,13 +188,49 @@ class _OrderPageState extends StateMVC<OrderPage> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            TimeUtils.getTimeStampToDate(int.parse(orderBean.paymentTimestamp!)),
-                                            style: AppStyle.font14MediumBlack87.override(fontSize: 14,color: Colors.grey.shade500),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "#${orderBean.saleCode!}",
+                                                style: AppStyle.font14MediumBlack87.override(fontSize: 14,color: Colors.black),
+                                              ),
+                                              Text(
+                                                TimeUtils.getTimeStampToDate(int.parse(orderBean.paymentTimestamp!)),
+                                                style: AppStyle.font14MediumBlack87.override(fontSize: 14,color: Colors.grey.shade500),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            ApiConstants.currency+orderBean.paymentDetails!.grandTotal.toString(),
-                                            style: AppStyle.font18BoldWhite.override(fontSize: 14),
+
+                                          Column(
+                                            children: [
+                                              // Container(
+                                              //     padding: EdgeInsets.all(4.0),
+                                              //     decoration: BoxDecoration(
+                                              //       color: Colors.green, // Background color
+                                              //       borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                              //     ),
+                                              //     child: Text(
+                                              //       "OTP:${orderBean.otp}",
+                                              //       style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.white),
+                                              //     )
+                                              // ),
+                                              Text(
+                                                ApiConstants.currency+orderBean.paymentDetails!.grandTotal.toString(),
+                                                style: AppStyle.font18BoldWhite.override(fontSize: 16),
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green, // Background color
+                                                    borderRadius: BorderRadius.circular(0.0), // Rounded corners
+                                                  ),
+                                                  child: Text(
+                                                    orderBean.orderType!.toUpperCase(),
+                                                    style: AppStyle.font14MediumBlack87.override(fontSize: 8,color: Colors.white),
+                                                  )
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -198,7 +284,12 @@ class _OrderPageState extends StateMVC<OrderPage> {
                                           Container(
                                             padding: EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
-                                              color: Colors.green, // Background color
+                                              color:orderBean.deliveryState == null ? Color(0XFF1C539A):
+                                              orderBean.deliveryState== "on_track" || orderBean.deliveryState== "on_ready" ? Color(0XFFEDDF3F):
+                                              orderBean.deliveryState== "on_picked" ? Color(0XFFF56C18):
+                                              orderBean.deliveryState== "on_reached" ? Color(0XFF574fa0): // Background color
+                                              orderBean.deliveryState== "on_finish" ? Color(0XFF154922):
+                                              Color(0XFFEDDF3F), // Background color
                                               borderRadius: BorderRadius.circular(10.0), // Rounded corners
                                             ),
                                             child: orderBean.deliveryState== "on_going" ? Text(

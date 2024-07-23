@@ -2,12 +2,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/model/login/login_response.dart';
+import 'package:driver/model/main/main_model.dart';
+import 'package:driver/model/notification/admin_notification_model.dart';
 import 'package:driver/utils/loader.dart';
 import 'package:driver/utils/preference_utils.dart';
 import 'package:driver/utils/validation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
+import '../model/chat/chat_request.dart';
+import '../model/chat/chat_response.dart';
 import '../model/common/common_response_model.dart';
 import '../model/service/service_response_model.dart';
 import '../network/api_service.dart';
@@ -19,6 +23,10 @@ class HomeController extends ControllerMVC{
   var serviceResponseModel = ServiceResponseModel();
   var profileModel = LoginResponse();
   var driverStatus = false;
+  var chatResponse = ChatResponse();
+  var adminNotificationModel = AdminNotificationModel();
+  var mainPageResponse = MainPageModel();
+  var chatRequest = ChatRequest();
 
   checkLiveStatus(BuildContext context){
     Loader.show();
@@ -27,6 +35,7 @@ class HomeController extends ControllerMVC{
       if(value.success!){
         setState(() {
           profileModel = value;
+          PreferenceUtils.saveZoneId(profileModel.data!.zoneId!);
           driverStatus = profileModel.data!.liveStatus!;
         });
       }
@@ -138,6 +147,72 @@ class HomeController extends ControllerMVC{
     }).catchError((e){
       print(e);
       ValidationUtils.showAppToast("Something went wrong.");
+    });
+  }
+
+  listOrderChat(String orderId, String type, String sender){
+    Loader.show();
+    apiService.listOrderChat(orderId,type,sender).then((value){
+      Loader.hide();
+      if(value.success!){
+        setState(() {
+          chatResponse = value;
+        });
+      }else{
+        ValidationUtils.showAppToast("Something wrong");
+      }
+    }).catchError((e){
+      print(e);
+      Loader.hide();
+    });
+  }
+
+  addOrderChat(ChatRequest chatRequest){
+    Loader.show();
+    apiService.addOrderChat(chatRequest).then((value){
+      Loader.hide();
+      if(value.success!){
+        listOrderChat(chatRequest.orderId!,chatRequest.type!,chatRequest.sender!);
+      }else{
+        ValidationUtils.showAppToast("Something wrong");
+      }
+    }).catchError((e){
+      print(e);
+      Loader.hide();
+    });
+  }
+
+  listMainPage(){
+    Loader.show();
+    apiService.listMainPage().then((value){
+      Loader.hide();
+      if(value.success!){
+        setState(() {
+          mainPageResponse = value;
+        });
+      }else{
+        ValidationUtils.showAppToast("Something wrong");
+      }
+    }).catchError((e){
+      print(e);
+      Loader.hide();
+    });
+  }
+
+  listNotifications(){
+    Loader.show();
+    apiService.listNotifications().then((value){
+      Loader.hide();
+      if(value.success!){
+        setState(() {
+          adminNotificationModel = value;
+        });
+      }else{
+        ValidationUtils.showAppToast("Something wrong");
+      }
+    }).catchError((e){
+      print(e);
+      Loader.hide();
     });
   }
 

@@ -32,6 +32,7 @@ class ProfileModel {
   String? gender;
   String? phone;
   String? status;
+  String? zoneId;
   bool? auth;
   bool? liveStatus = false;
   bool? approveState;
@@ -58,7 +59,7 @@ class ProfileModel {
         this.supportMobile,
         this.supportWhatsapp,
         this.image,
-        this.walletAmount});
+        this.walletAmount,this.zoneId});
 
   ProfileModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -77,6 +78,7 @@ class ProfileModel {
     supportMobile = json['support_mobile'];
     supportWhatsapp = json['support_whatsapp'];
     image = json['image'];
+    zoneId = json['zone_id'];
     walletAmount = json['walletAmount'];
   }
 

@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
+import '../model/category/shop_focus_model.dart';
 import '../model/order/order_response.dart';
 import '../model/service/service_response_model.dart';
 import '../network/api_service.dart';
@@ -19,7 +20,7 @@ class OrderController extends ControllerMVC{
   var serviceCompletedOrder = 0;
   var serviceEarning = 0.0;
 
-
+  var shopFocusModel = ShopFocusModel();
 
   listServiceReports(String status,String type,String startDate,String endDate){
     earning = 0.0;
@@ -65,10 +66,10 @@ class OrderController extends ControllerMVC{
     });
   }
 
-  listAllOrders(String status){
+  listAllOrders(String status, String shopFocusId){
     earning = 0.0;
     Loader.show();
-    apiService.listOrders(status).then((value) {
+    apiService.listOrders(status,shopFocusId).then((value) {
       Loader.hide();
         if(value.data!=null) {
           setState(() {
@@ -78,6 +79,11 @@ class OrderController extends ControllerMVC{
               earning = earning + double.parse(element.driverCharge!);
             });
           });
+        }else{
+          setState(() {
+            orderModel = value;
+          });
+          ValidationUtils.showAppToast("No Orders found");
         }
       notifyListeners();
     }).catchError((e){
@@ -92,6 +98,9 @@ class OrderController extends ControllerMVC{
     apiService.orderStatus(saleCode,status).then((value){
       Loader.hide();
       Navigator.pop(context);
+      if(status == "on_finish"){
+        Navigator.pop(context);
+      }
     }).catchError((e){
       Loader.hide();
       print(e);
@@ -99,6 +108,23 @@ class OrderController extends ControllerMVC{
     });
   }
 
+  getShopFocus(BuildContext context) async {
+    Loader.show();
+    apiService.getShopFocus().then((value){
+      Loader.hide();
+      setState(() {
+        shopFocusModel = value;
+        ShopFocusData focusData = new ShopFocusData();
+        focusData.title = "All";
+        focusData.shopFocusId = "0";
+        shopFocusModel.data!.insert(0, focusData);
+      });
+    }).catchError((e){
+      Loader.hide();
+      print(e);
+      ValidationUtils.showAppToast("Something went wrong.");
+    });
+  }
 
 
 }
