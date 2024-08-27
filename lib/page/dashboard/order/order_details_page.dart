@@ -123,7 +123,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    '2',
+                                    widget.orderDetails.productDetails!.length.toString(),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -200,7 +200,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                 ),
               ),
               SizedBox(height: 30,),
-              Container(
+             widget.orderDetails.deliveryState != "on_finish" ?  Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white, // Background color
@@ -261,7 +261,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                                             SizedBox(width: 5,),
                                             InkWell(
                                               onTap: (){
-                                                PageNavigation.gotoChatPage(context,widget.orderDetails.saleCode!,"driver","user");
+                                                PageNavigation.gotoChatPage(context,widget.orderDetails.saleCode!,"user","driver");
                                               },
                                               child: Padding(
                                                 padding: const EdgeInsets.all(8.0),
@@ -292,7 +292,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("PickUp Address",style: AppStyle.font18BoldWhite.override(color: AppColors.themeColor,fontSize: 16),),
+                              Text("Shop Address",style: AppStyle.font18BoldWhite.override(color: AppColors.themeColor,fontSize: 16),),
                             ],
                           ),
                         ],
@@ -347,7 +347,7 @@ class _OrderDetailsPageState extends StateMVC<OrderDetailsPage> {
                     ],
                   ),
                 ),
-              ),
+              ):Container(),
               SizedBox(height: 30,),
               Container(
                 width: double.infinity,

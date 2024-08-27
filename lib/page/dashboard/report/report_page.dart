@@ -189,7 +189,8 @@ class _ReportPageState extends StateMVC<ReportPage> {
                       SizedBox(height: 10,),
                       Text(_con.completedOrder.toString(),style: AppStyle.font14MediumBlack87.override(fontSize: 20),),
                     ],
-                  ):Column(
+                  ):
+                  Column(
                     children: [
                       Text("Completed Services",style: AppStyle.font18BoldWhite.override(fontSize: 18),),
                       SizedBox(height: 10,),
@@ -250,35 +251,35 @@ class _ReportPageState extends StateMVC<ReportPage> {
                                           ),
                                         ],
                                       ),
-                                      Divider(
-                                        color: Colors.grey.shade500,
-                                      ),
-                                      Text(
-                                        "From",
-                                        style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                      ),
-                                      SizedBox(height: 2,),
-                                      Text(
-                                        fromAddress,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Text(
-                                        "To",
-                                        style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                      ),
-                                      SizedBox(height: 2,),
-                                      Text(
-                                        toAddress,maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                      ),
-
-                                      Divider(
-                                        color: Colors.grey.shade500,
-                                      ),
+                                      // Divider(
+                                      //   color: Colors.grey.shade500,
+                                      // ),
+                                      // Text(
+                                      //   "From",
+                                      //   style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                      // ),
+                                      // SizedBox(height: 2,),
+                                      // Text(
+                                      //   fromAddress,
+                                      //   maxLines: 1,
+                                      //   overflow: TextOverflow.ellipsis,
+                                      //   style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                      // ),
+                                      // SizedBox(height: 5,),
+                                      // Text(
+                                      //   "To",
+                                      //   style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                      // ),
+                                      // SizedBox(height: 2,),
+                                      // Text(
+                                      //   toAddress,maxLines: 1,
+                                      //   overflow: TextOverflow.ellipsis,
+                                      //   style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                      // ),
+                                      //
+                                      // Divider(
+                                      //   color: Colors.grey.shade500,
+                                      // ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -319,7 +320,9 @@ class _ReportPageState extends StateMVC<ReportPage> {
                         ),
                       ),
                     );
-                  }):Container(): _con.serviceResponseModel.data!=null ?  ListView.builder(
+                  }):Container(
+                child: Text("No Orders",style: AppStyle.font14MediumBlack87,),
+              ): _con.serviceResponseModel.data!=null ?  ListView.builder(
                   shrinkWrap: true,
                   itemCount: _con.serviceResponseModel.data!.length,
                   itemBuilder: (context,index){
@@ -367,34 +370,34 @@ class _ReportPageState extends StateMVC<ReportPage> {
                                         ),
                                       ],
                                     ),
-                                    Divider(
-                                      color: Colors.grey.shade500,
-                                    ),
-                                    Text(
-                                      "From",
-                                      style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                    ),
-                                    SizedBox(height: 2,),
-                                    Text(
-                                      serviceBean.fromlocation!,maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Text(
-                                      "To",
-                                      style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                    ),
-                                    SizedBox(height: 2,),
-                                    Text(
-                                      serviceBean.tolocation!,maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                    ),
-
-                                    Divider(
-                                      color: Colors.grey.shade500,
-                                    ),
+                                    // Divider(
+                                    //   color: Colors.grey.shade500,
+                                    // ),
+                                    // Text(
+                                    //   "From",
+                                    //   style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                    // ),
+                                    // SizedBox(height: 2,),
+                                    // Text(
+                                    //   serviceBean.fromlocation!,maxLines: 1,
+                                    //   overflow: TextOverflow.ellipsis,
+                                    //   style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                    // ),
+                                    // SizedBox(height: 5,),
+                                    // Text(
+                                    //   "To",
+                                    //   style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                    // ),
+                                    // SizedBox(height: 2,),
+                                    // Text(
+                                    //   serviceBean.tolocation!,maxLines: 1,
+                                    //   overflow: TextOverflow.ellipsis,
+                                    //   style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                    // ),
+                                    //
+                                    // Divider(
+                                    //   color: Colors.grey.shade500,
+                                    // ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -423,7 +426,9 @@ class _ReportPageState extends StateMVC<ReportPage> {
                         ],
                       ),
                     );
-                  }):Container(),
+                  }):Container(
+                child: Text("No Orders",style: AppStyle.font14MediumBlack87,),
+              ),
             ],
           ),
         ),

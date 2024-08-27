@@ -10,11 +10,15 @@ import 'package:driver/utils/time_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_overlay_apps/flutter_overlay_apps.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants/app_colors.dart';
@@ -24,26 +28,7 @@ import 'language/app_localizations.dart';
 import 'model/firebase/firebase_order_response.dart';
 import 'navigation/navigation_service.dart';
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyB0TVoTBaKEJwu0tMaNPwAL6-JqCjH394M',
-      appId: '1:929593739104:android:d4c8861245e7f1c3060005',
-      messagingSenderId: '929593739104',
-      projectId: 'oiaway',
-      storageBucket: 'oiaway.appspot.com',
-    ),
-  );
-  // Handle background message
-  playOrderSound();
-  PreferenceUtils.saveNotificationData(message.data);
-
-}
-
 final AudioPlayer _audioPlayer = AudioPlayer();
-
-
 playOrderSound() async {
   await _audioPlayer.play(AssetSource("sound/order.wav"));
 }
@@ -54,7 +39,7 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
         apiKey: 'AIzaSyB0TVoTBaKEJwu0tMaNPwAL6-JqCjH394M',
-        appId: '1:929593739104:android:d4c8861245e7f1c3060005',
+        appId: '1:929593739104:android:aec40bd1ce9262bf060005',
         messagingSenderId: '929593739104',
         projectId: 'oiaway',
         storageBucket: 'oiaway.appspot.com',
@@ -62,8 +47,36 @@ Future<void> main() async {
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     initializeService();
+    _requestPermissions();
   }
-  runApp(const MyApp());
+  runApp(OverlaySupport.global(child: MyApp()));
+}
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyB0TVoTBaKEJwu0tMaNPwAL6-JqCjH394M',
+      appId: '1:929593739104:android:aec40bd1ce9262bf060005',
+      messagingSenderId: '929593739104',
+      projectId: 'oiaway',
+      storageBucket: 'oiaway.appspot.com',
+    ),
+  );
+  // Handle background message
+  playOrderSound();
+  PreferenceUtils.saveNotificationData(message.data);
+}
+
+
+
+
+Future<void> _requestPermissions() async {
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
 }
 
 Future<void> initializeService() async {
@@ -97,10 +110,7 @@ Future<void> initializeService() async {
 
   await service.configure(
     androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
-
-      // auto start service
       autoStart: true,
       isForegroundMode: true,
 
@@ -110,14 +120,6 @@ Future<void> initializeService() async {
       foregroundServiceNotificationId: 888,
     ),
     iosConfiguration: IosConfiguration(
-      // // auto start service
-      // autoStart: true,
-      //
-      // // this will be executed when app is in foreground in separated isolate
-      // onForeground: onStart,
-      //
-      // // you have to enable background fetch capability on xcode project
-      // onBackground: onIosBackground,
     ),
   );
 }
@@ -126,7 +128,11 @@ Future<void> initializeService() async {
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
   DartPluginRegistrant.ensureInitialized();
-
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+  //  playOrderSound();
+    PreferenceUtils.saveNotificationData(message.data);
+    //await FlutterOverlayApps.showOverlay(height: 300, width: 400, alignment: OverlayAlignment.center);
+  });
   // For flutter prior to version 3.0.0
   // We have to register the plugin manually
 
@@ -140,23 +146,24 @@ void onStart(ServiceInstance service) async {
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
+      print("onBackground 4Square");
     });
 
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
+      print("onBackground 4Square");
     });
   }
 
   service.on('stopService').listen((event) {
     service.stopSelf();
+    print("onBackground 4Square");
   });
 
   // bring to foreground
   Timer.periodic(const Duration(seconds: 1), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
-        /// OPTIONAL for use custom notification
-        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
         flutterLocalNotificationsPlugin.show(
           888,
           'COOL SERVICE',
@@ -178,26 +185,7 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
-
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //  playOrderSound();
-    //  PreferenceUtils.saveNotificationData(message.data);
-    // });
-
-    /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-
-    // test using external plugin
-   // final deviceInfo = DeviceInfoPlugin();
-   //  String? device;
-   //  if (Platform.isAndroid) {
-   //    final androidInfo = await deviceInfo.androidInfo;
-   //    device = androidInfo.model;
-   //  } else if (Platform.isIOS) {
-   //    final iosInfo = await deviceInfo.iosInfo;
-   //    device = iosInfo.model;
-   //  }
-
     service.invoke(
       'update',
       {
@@ -208,9 +196,19 @@ void onStart(ServiceInstance service) async {
   });
 }
 
+// overlay entry point
+@pragma("vm:entry-point")
+void showOverlay() {
+  runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Material(child: Text("My overlay"))
+  ));
+}
 
 
 class MyApp extends StatefulWidget {
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   const MyApp({super.key});
 
   @override
@@ -220,7 +218,7 @@ class MyApp extends StatefulWidget {
       context.findAncestorStateOfType<_MyAppState>();
 }
 
-class _MyAppState extends State<MyApp>  {
+class _MyAppState extends State<MyApp>  with WidgetsBindingObserver {
 
   ThemeMode _themeMode = FlutterFlowTheme.themeMode;
 
@@ -229,9 +227,38 @@ class _MyAppState extends State<MyApp>  {
     FlutterFlowTheme.saveThemeMode(mode);
   });
 
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("app in resumed");
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        SystemNavigator.pop();
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        break;
+      case AppLifecycleState.hidden:
+        // TODO: Handle this case.
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("Message opened app");
@@ -280,7 +307,7 @@ class _MyAppState extends State<MyApp>  {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.themeColor),
           useMaterial3: true,
           fontFamily: AppStyle.robotoRegular,
-
+    
         ),
         home: SplashPage(),
       ),

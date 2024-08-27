@@ -15,18 +15,23 @@ import '../model/chat/chat_response.dart';
 import '../model/common/common_response_model.dart';
 import '../model/service/service_response_model.dart';
 import '../network/api_service.dart';
+import '../page/dashboard/order/order_page.dart';
+import 'order_controller.dart';
 
 class HomeController extends ControllerMVC{
 
+  final OrderController orderController = OrderController();
   ApiService apiService = ApiService();
   var commonResponseModel = CommonResponseModel();
-  var serviceResponseModel = ServiceResponseModel();
+  var _serviceResponseModel = ServiceResponseModel();
+  ServiceResponseModel get serviceResponseModel => _serviceResponseModel;
   var profileModel = LoginResponse();
   var driverStatus = false;
   var chatResponse = ChatResponse();
   var adminNotificationModel = AdminNotificationModel();
   var mainPageResponse = MainPageModel();
   var chatRequest = ChatRequest();
+  var orderPage = OrderPage();
 
   checkLiveStatus(BuildContext context){
     Loader.show();
@@ -52,6 +57,9 @@ class HomeController extends ControllerMVC{
     apiService.statusUpdate(status).then((value){
       Loader.hide();
       checkLiveStatus(context);
+      if(value.success! == false){
+        ValidationUtils.showAppToast("Contact your admin");
+      }
     }).catchError((e){
       Loader.hide();
       print(e);
@@ -84,6 +92,7 @@ class HomeController extends ControllerMVC{
     apiService.orderStatus(saleCode,status).then((value){
       Loader.hide();
       if(value.success!) {
+        orderController.updateStatus("newState");
         Navigator.pop(context);
       }else{
         Navigator.pop(context);
@@ -98,15 +107,21 @@ class HomeController extends ControllerMVC{
 
   listService(BuildContext context){
     Loader.show();
+    if(_serviceResponseModel.data!=null){
+      setState(() {
+        _serviceResponseModel.data!.clear();
+      });
+    }
     apiService.listService().then((value){
       Loader.hide();
       if(value.success!){
         setState(() {
-          serviceResponseModel = value;
+          _serviceResponseModel = value;
         });
         notifyListeners();
       }else{
-        ValidationUtils.showAppToast("Something wrong");
+
+        //ValidationUtils.showAppToast("Something wrong");
       }
     }).catchError((e){
       print(e);
@@ -120,6 +135,24 @@ class HomeController extends ControllerMVC{
     apiService.serviceStatus(id,status).then((value){
       Loader.hide();
       Navigator.pop(context);
+      if(status == "Delivered") {
+        Navigator.pop(context);
+      }
+    }).catchError((e){
+      Loader.hide();
+      print(e);
+      ValidationUtils.showAppToast("Something went wrong.");
+    });
+  }
+
+  acceptService(BuildContext context,String id, String status,String reason) async {
+    Loader.show();
+    apiService.acceptService(id,status,reason).then((value){
+      Loader.hide();
+      listService(context);
+      if(status == "Rejected"){
+        Navigator.pop(context);
+      }
     }).catchError((e){
       Loader.hide();
       print(e);

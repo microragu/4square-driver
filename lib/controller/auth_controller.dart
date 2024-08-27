@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:driver/model/common/common_response_model.dart';
+import 'package:driver/model/forgot/forgot_model.dart';
 import 'package:driver/navigation/page_navigation.dart';
 import 'package:driver/utils/preference_utils.dart';
 import 'package:driver/utils/validation_utils.dart';
@@ -22,7 +23,8 @@ class AuthController extends ControllerMVC{
   var loginRequest = LoginRequest();
   var commResponseModel = CommonResponseModel();
   var driverModel = DriverModel();
-
+  var forgotModel = ForgotModel();
+  var isOtpShow = false;
   login(BuildContext context){
     Loader.show();
     if(ValidationUtils.emptyValidation(loginRequest.phone!) && ValidationUtils.emptyValidation(loginRequest.password!)){
@@ -50,6 +52,38 @@ class AuthController extends ControllerMVC{
       Loader.hide();
       setState(() {
         driverModel = value;
+      });
+    }).catchError((e){
+      Loader.hide();
+      print(e);
+      ValidationUtils.showAppToast("Something went wrong.");
+    });
+  }
+
+  forgotPasswordOtp(BuildContext context) async {
+    Loader.show();
+    apiService.forgotPassword(loginRequest.phone!).then((value){
+      Loader.hide();
+      setState(() {
+        isOtpShow = true;
+        forgotModel = value;
+      });
+    }).catchError((e){
+      Loader.hide();
+      print(e);
+      ValidationUtils.showAppToast("Something went wrong.");
+    });
+  }
+
+  changePassword(BuildContext context,String password,String mobile) async {
+    Loader.show();
+    apiService.changePassword(password,mobile).then((value){
+      Loader.hide();
+      setState(() {
+        if(value.success!){
+          ValidationUtils.showAppToast("Password update successfully.");
+          Navigator.pushNamedAndRemoveUntil(context,'/',(_) => false);
+        }
       });
     }).catchError((e){
       Loader.hide();

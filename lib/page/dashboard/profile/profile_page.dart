@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_style.dart';
@@ -113,7 +114,7 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
 
                       InkWell(
                         onTap: (){
-
+                            PageNavigation.gotoPolicyPage(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -143,29 +144,66 @@ class _ProfilePageState extends StateMVC<ProfilePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Color(0XFFF7F7F7),
-                            border: Border.all(
-                              color:Color(0XFFF7F7F7),
-                              width: 0,
+                      InkWell(
+                        onTap: (){
+                          Share.share('App Link: https://thee4square.com/');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0XFFF7F7F7),
+                              border: Border.all(
+                                color:Color(0XFFF7F7F7),
+                                width: 0,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.share,color: AppColors.themeColor,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    'Refer App',
+                                    style: AppStyle.font14MediumBlack87.override(color: Colors.black,fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.help,color: AppColors.themeColor,),
-                                SizedBox(width: 5,),
-                                Text(
-                                  'Help',
-                                  style: AppStyle.font14MediumBlack87.override(color: Colors.black,fontSize: 14),
-                                ),
-                              ],
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          PageNavigation.gotoHelpPage(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0XFFF7F7F7),
+                              border: Border.all(
+                                color:Color(0XFFF7F7F7),
+                                width: 0,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.help,color: AppColors.themeColor,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    'Help',
+                                    style: AppStyle.font14MediumBlack87.override(color: Colors.black,fontSize: 14),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -12,8 +12,13 @@ import '../utils/validation_utils.dart';
 
 class OrderController extends ControllerMVC{
 
+  static final OrderController _instance = OrderController._internal();
+  factory OrderController() => _instance;
+  OrderController._internal();
+
   ApiService apiService = ApiService();
-  var orderModel = OrderResponse();
+  var _orderModel = OrderResponse();
+  OrderResponse get orderModel => _orderModel;
   var serviceResponseModel = ServiceResponseModel();
   var completedOrder = 0;
   var earning = 0.0;
@@ -21,6 +26,13 @@ class OrderController extends ControllerMVC{
   var serviceEarning = 0.0;
 
   var shopFocusModel = ShopFocusModel();
+
+
+  updateStatus(String newState) {
+    setState(()  {
+     listAllOrders("0", "0");
+    });
+  }
 
   listServiceReports(String status,String type,String startDate,String endDate){
     earning = 0.0;
@@ -35,6 +47,8 @@ class OrderController extends ControllerMVC{
             serviceEarning = serviceEarning + double.parse(element.deliveryfees!);
           });
         });
+      }else{
+        serviceResponseModel.data!.clear();
       }
       notifyListeners();
     }).catchError((e){
@@ -51,18 +65,23 @@ class OrderController extends ControllerMVC{
       Loader.hide();
       if(value.data!=null) {
         setState(() {
-          orderModel = value;
+          _orderModel = value;
           completedOrder = orderModel.data!.length;
           orderModel.data!.forEach((element) {
             earning = earning + double.parse(element.driverCharge!);
           });
         });
+      }else{
+        if(_orderModel.data!=null) {
+          _orderModel.data!.clear();
+        }
+        completedOrder = 0;
       }
       notifyListeners();
     }).catchError((e){
       Loader.hide();
       print(e);
-      ValidationUtils.showAppToast("Something went wrong.");
+      ValidationUtils.showAppToast("Something went wrong");
     });
   }
 
@@ -73,7 +92,7 @@ class OrderController extends ControllerMVC{
       Loader.hide();
         if(value.data!=null) {
           setState(() {
-            orderModel = value;
+            _orderModel = value;
             completedOrder = orderModel.data!.length;
             orderModel.data!.forEach((element) {
               earning = earning + double.parse(element.driverCharge!);
@@ -81,7 +100,7 @@ class OrderController extends ControllerMVC{
           });
         }else{
           setState(() {
-            orderModel = value;
+            _orderModel = value;
           });
           ValidationUtils.showAppToast("No Orders found");
         }
@@ -95,8 +114,9 @@ class OrderController extends ControllerMVC{
 
   changeOrderStatus(String saleCode,String status, BuildContext context) async {
     Loader.show();
-    apiService.orderStatus(saleCode,status).then((value){
+    apiService.orderStatus(saleCode,status).then((value) async {
       Loader.hide();
+      updateStatus("newState");
       Navigator.pop(context);
       if(status == "on_finish"){
         Navigator.pop(context);

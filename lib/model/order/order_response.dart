@@ -44,6 +44,7 @@ class OrderDetails {
   String? delivaryDatetime;
   Null? deliverAssignedtime;
   String? deliveryState;
+  String? adminforceassigned;
   String? driverCharge;
   Vendor? vendor;
 
@@ -63,7 +64,7 @@ class OrderDetails {
         this.deliverAssignedtime,
         this.deliveryState,
         this.driverCharge,
-        this.vendor,this.otp,this.orderType});
+        this.vendor,this.otp,this.orderType,this.adminforceassigned});
 
   OrderDetails.fromJson(Map<String, dynamic> json) {
     userid = json['userid'];
@@ -88,6 +89,7 @@ class OrderDetails {
     grandTotal = json['grand_total'];
     saleDatetime = json['sale_datetime'];
     delivaryDatetime = json['delivary_datetime'];
+    adminforceassigned = json['adminforceassigned'];
     deliverAssignedtime = json['deliver_assignedtime'];
     deliveryState = json['delivery_state'];
     driverCharge = json['driver_charge'];

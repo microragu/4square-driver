@@ -1,5 +1,6 @@
 
 
+import 'package:driver/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +32,7 @@ class ValidationUtils{
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.themeColor,
         textColor: Colors.white,
         fontSize: 16.0
     );

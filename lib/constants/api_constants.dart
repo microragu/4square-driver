@@ -10,11 +10,14 @@ class ApiConstants{
   static var updateFcmtoken = BASE_URL+"updateFcmtoken";
   static var changeOrderStatus = BASE_URL+"changeOrderStatus/";
   static var changeServicestatus = BASE_URL+"changeServicestatus/";
+  static var acceptService = BASE_URL+"acceptService/";
   static var order = BASE_URL+"order/";
   static var listReport = BASE_URL+"listReport/";
   static var listServiceReport = BASE_URL+"listServiceReport/";
   static var listOtherService = BASE_URL+"listOtherService/";
   static var getProfile = BASE_URL+"getProfile/";
+  static var forgotPassword = BASE_URL+"forgotPassword/";
+  static var changePassword = BASE_URL+"changePassword/";
   static var profileimage = BASE_URL+"profileimage/";
   static var orderReject = BASE_URL+"orderReject/";
   static var updateLocation = BASE_URL+"updateLocation/";

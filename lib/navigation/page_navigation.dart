@@ -5,6 +5,10 @@ import 'package:driver/page/dashboard/notifications/notification_page.dart';
 import 'package:driver/page/dashboard/order/order_details_page.dart';
 import 'package:driver/page/dashboard/profile/profile_page.dart';
 import 'package:driver/page/dashboard/service/service_details_page.dart';
+import 'package:driver/page/help/help_page.dart';
+import 'package:driver/page/login/change_password_page.dart';
+import 'package:driver/page/login/forgot_password.dart';
+import 'package:driver/page/policy/policy_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +59,42 @@ class PageNavigation{
       context,
       MaterialPageRoute(
         builder: (context) => OrderChatPage(orderId, type,sender),
+      ),
+    );
+  }
+
+  static gotoPolicyPage(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PolicyPage(),
+      ),
+    );
+  }
+
+  static gotoHelpPage(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HelpPage(),
+      ),
+    );
+  }
+
+  static gotoForgotPage(BuildContext context){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ForgotPasswordPage(),
+      ),
+    );
+  }
+
+  static gotoChangePassword(BuildContext context, String? phone){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangePasswordPage(phone),
       ),
     );
   }

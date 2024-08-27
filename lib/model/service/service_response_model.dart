@@ -29,6 +29,7 @@ class ServiceResponseModel {
 
 class Service {
   String? id;
+  String? serviceCode;
   String? fromname;
   String? fphoneno;
   String? fromtime;
@@ -44,8 +45,10 @@ class Service {
   String? fromLatitude;
   String? fromLongitude;
   String? toLatitude;
+  String? otp;
   String? deliveryStatus;
   String? toLongitude;
+  String? isAccepted;
   List<Types>? types;
   String? createdAt;
 
@@ -68,7 +71,7 @@ class Service {
         this.toLatitude,
         this.toLongitude,
         this.types,
-        this.createdAt,this.deliveryStatus});
+        this.createdAt,this.deliveryStatus,this.otp,this.serviceCode,this.isAccepted});
 
   Service.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,12 +87,14 @@ class Service {
     status = json['status'];
     distance1 = json['distance1'];
     deliveryfees = json['deliveryfees'];
+    serviceCode = json['service_code'];
     userid = json['userid'];
     fromLatitude = json['from_latitude'];
     fromLongitude = json['from_longitude'];
     toLatitude = json['to_latitude'];
     deliveryStatus = json['delivery_status'];
     toLongitude = json['to_longitude'];
+    otp = json['otp'];
     if (json['types'] != null) {
       types = <Types>[];
       json['types'].forEach((v) {
@@ -97,6 +102,7 @@ class Service {
       });
     }
     createdAt = json['created_at'];
+    isAccepted = json['is_accepted'];
   }
 
   Map<String, dynamic> toJson() {

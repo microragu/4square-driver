@@ -27,13 +27,14 @@ class Data {
   int? currentcount;
   int? todayotherservicecount;
   int? overallotherservicecount;
+  String? inHandAmount;
   String? sos;
 
   Data(
       {this.todaycount,
         this.currentcount,
         this.todayotherservicecount,
-        this.overallotherservicecount,this.sos});
+        this.overallotherservicecount,this.sos,this.inHandAmount});
 
   Data.fromJson(Map<String, dynamic> json) {
     todaycount = json['todaycount'] == null ? 0 :  json['todaycount'];
@@ -41,6 +42,7 @@ class Data {
     todayotherservicecount = json['todayotherservicecount']== null ? 0 :  json['todayotherservicecount'];
     overallotherservicecount = json['overallotherservicecount']== null ? 0 :  json['overallotherservicecount'];
     sos = json['sos']== null ? "" :  json['sos'];
+    inHandAmount = json['inhand']== null ? "0" :  json['inhand'];
   }
 
   Map<String, dynamic> toJson() {

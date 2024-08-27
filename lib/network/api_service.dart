@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/api_constants.dart';
 import '../model/chat/chat_request.dart';
 import '../model/chat/chat_response.dart';
+import '../model/forgot/forgot_model.dart';
 import '../model/service/service_response_model.dart';
 import '../utils/validation_utils.dart';
 import 'dio_client.dart';
@@ -188,6 +189,26 @@ class ApiService {
     }
   }
 
+  Future<CommonResponseModel> acceptService(String id, String status,String reasons) async {
+    try {
+      String? userId = await PreferenceUtils.getUserId();
+      final response = await dioClient.get(
+          ApiConstants.acceptService+"$id/$status/$userId/$reasons");
+      if (response.statusCode == 200) {
+        return CommonResponseModel.fromJson(response.data);
+      } else {
+        ValidationUtils.showAppToast(
+            'Failed to sign in. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to sign in. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      ValidationUtils.showAppToast('Error during sign in: $e');
+      print('Error during sign in: $e');
+      throw e;
+    }
+  }
+
   Future<OrderResponse> listReports(String status,String type,String startDate,String endDate) async {
     try {
       String? userId = await PreferenceUtils.getUserId();
@@ -275,6 +296,46 @@ class ApiService {
           ApiConstants.getProfile+"$userId");
       if (response.statusCode == 200) {
         return DriverModel.fromJson(response.data);
+      } else {
+        ValidationUtils.showAppToast(
+            'Failed to sign in. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to sign in. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      ValidationUtils.showAppToast('Error during sign in: $e');
+      print('Error during sign in: $e');
+      throw e;
+    }
+  }
+
+  Future<ForgotModel> forgotPassword(String mobile) async {
+    try {
+      String? userId = await PreferenceUtils.getUserId();
+      final response = await dioClient.get(
+          ApiConstants.forgotPassword+"$mobile");
+      if (response.statusCode == 200) {
+        return ForgotModel.fromJson(response.data);
+      } else {
+        ValidationUtils.showAppToast(
+            'Failed to sign in. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to sign in. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      ValidationUtils.showAppToast('Error during sign in: $e');
+      print('Error during sign in: $e');
+      throw e;
+    }
+  }
+
+  Future<CommonResponseModel> changePassword(String password,String mobile) async {
+    try {
+      String? userId = await PreferenceUtils.getUserId();
+      final response = await dioClient.get(
+          ApiConstants.changePassword+"$password/$mobile");
+      if (response.statusCode == 200) {
+        return CommonResponseModel.fromJson(response.data);
       } else {
         ValidationUtils.showAppToast(
             'Failed to sign in. Status code: ${response.statusCode}');

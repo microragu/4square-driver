@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:driver/constants/app_style.dart';
+import 'package:driver/controller/order_controller.dart';
 import 'package:driver/flutter_flow/flutter_flow_theme.dart';
 import 'package:driver/model/notification/notification_model.dart';
 import 'package:driver/navigation/page_navigation.dart';
@@ -37,16 +38,16 @@ class DashBoardPage extends StatefulWidget {
   _DashBoardPageState createState() => _DashBoardPageState();
 }
 
-class _DashBoardPageState extends StateMVC<DashBoardPage> {
+class _DashBoardPageState extends StateMVC<DashBoardPage> with WidgetsBindingObserver {
 
   late HomeController _con;
 
   _DashBoardPageState() : super(HomeController()) {
     _con = controller as HomeController;
   }
+  OrderPage orderPage = new OrderPage();
 
-  var firebaseOrderResponse = FirebaseOrderResponse();
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   String title = "Profile";
   var icon = Icon(Icons.person,color: Colors.white,size: 24,);
   late final FirebaseMessaging _firebaseMessaging;
@@ -124,6 +125,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
   @override
   void initState() {
     // TODO: implement initState
+    WidgetsBinding.instance?.addObserver(this);
     super.initState();
     _firebaseMessaging = FirebaseMessaging.instance;
     _con.checkLiveStatus(context);
@@ -132,6 +134,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       //print(message.data.toString());
       //PreferenceUtils.saveNotificationData(message.data);
+      var firebaseOrderResponse = FirebaseOrderResponse();
       firebaseOrderResponse = FirebaseOrderResponse();
       firebaseOrderResponse.vendorId = message.data['vendor_id'];
       firebaseOrderResponse.type = message.data['type'];
@@ -139,27 +142,47 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
 
       playOrderSound();
       if(firebaseOrderResponse.type == "on_track") {
-        checkOrderNotifications(context, firebaseOrderResponse.orderid!);
+        checkOrderNotifications(context, firebaseOrderResponse);
       }else {
         // /startTimer();
         if(firebaseOrderResponse.type == "on_service"){
-          _showServiceDialog(context, _remainingTime);
+          _showServiceDialog(context, _remainingTime,firebaseOrderResponse);
         }else{
-          _showOnReadyCustomDialog(context, _remainingTime);
+          _showOnReadyCustomDialog(context, _remainingTime,firebaseOrderResponse);
         }
       }
     });
 
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   firebaseOrderResponse = FirebaseOrderResponse();
+    //   firebaseOrderResponse.vendorId = message.data['vendor_id'];
+    //   firebaseOrderResponse.type = message.data['type'];
+    //   firebaseOrderResponse.orderid = message.data['orderid'];
+    //
+    //   playOrderSound();
+    //   if(firebaseOrderResponse.type == "on_track") {
+    //     checkOrderNotifications(context, firebaseOrderResponse.orderid!);
+    //   }else {
+    //     // /startTimer();
+    //     if(firebaseOrderResponse.type == "on_service"){
+    //       _showServiceDialog(context, _remainingTime);
+    //     }else{
+    //       _showOnReadyCustomDialog(context, _remainingTime);
+    //     }
+    //   }
+    // });
+
     PreferenceUtils.getNotificationData().then((value){
          if(value!=null) {
            Map<String, dynamic>? data = value;
+           var firebaseOrderResponse = FirebaseOrderResponse();
            firebaseOrderResponse = FirebaseOrderResponse();
            firebaseOrderResponse.vendorId = data['vendor_id'];
            firebaseOrderResponse.type = data['type'];
            firebaseOrderResponse.orderid = data['orderid'];
            // playOrderSound();
            if(firebaseOrderResponse.type == "on_track") {
-             checkOrderNotifications(context, firebaseOrderResponse.orderid!);
+             checkOrderNotifications(context, firebaseOrderResponse);
            }
 
          }else{
@@ -169,19 +192,19 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
 
   }
 
-  checkOrderNotifications(BuildContext context,String saleCode){
+  checkOrderNotifications(BuildContext context, FirebaseOrderResponse firebaseOrderResponse){
     Loader.show();
-    apiService.checkOrderNotifications(saleCode).then((value){
+    apiService.checkOrderNotifications(firebaseOrderResponse.orderid!).then((value){
       Loader.hide();
       if(value.data!=null){
         PreferenceUtils.clearNotificationData();
           //startTimer();
           if (firebaseOrderResponse.type == "on_track") {
-            _showCustomDialog(context, _remainingTime,value);
+            _showCustomDialog(context, _remainingTime,value,firebaseOrderResponse);
           } else if (firebaseOrderResponse.type == "on_service") {
-            _showServiceDialog(context, _remainingTime);
+            _showServiceDialog(context, _remainingTime,firebaseOrderResponse);
           } else {
-            _showOnReadyCustomDialog(context, _remainingTime);
+            _showOnReadyCustomDialog(context, _remainingTime,firebaseOrderResponse);
           }         // data = null;
       }
     }).catchError((e){
@@ -194,9 +217,16 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+
+  }
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
@@ -239,7 +269,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
 
 
 
-  void _showServiceDialog(BuildContext context, int remainingTime) {
+  void _showServiceDialog(BuildContext context, int remainingTime, FirebaseOrderResponse firebaseOrderResponse) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -288,11 +318,11 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                           child: Image.asset("assets/images/accept.png",height:  40,width: 40,fit: BoxFit.fill,),
                         ),
                       ),
-                      SizedBox(width: 120,),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset("assets/images/decline.png",height: 60,width: 60,fit: BoxFit.fill,),
-                      ),
+                      // SizedBox(width: 120,),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: Image.asset("assets/images/decline.png",height: 60,width: 60,fit: BoxFit.fill,),
+                      // ),
                     ],
                   )
                 ],
@@ -304,7 +334,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
     );
   }
 
-  void _showCustomDialog(BuildContext context, int remainingTime, NotificationModel value) {
+  void _showCustomDialog(BuildContext context, int remainingTime, NotificationModel value, FirebaseOrderResponse firebaseOrderResponse) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -331,28 +361,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                         style: AppStyle.font14MediumBlack87.override(fontSize: 16),
                       ),
                       SizedBox(width: 20,),
-                      // Container(
-                      //   width: 40,
-                      //   height: 40,
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.amber[800],
-                      //     borderRadius: BorderRadius.circular(50),
-                      //     border: Border.all(
-                      //       color: Colors.black,
-                      //       width: 1,
-                      //     ),
-                      //   ),
-                      //   child: Center(
-                      //     child: Text(
-                      //       '$remainingTime',
-                      //       style: TextStyle(
-                      //         fontSize: 14,
-                      //         fontWeight: FontWeight.bold,
-                      //         color: Colors.white,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // )
+
                     ],
                   ),
                   SizedBox(height: 20,),
@@ -415,6 +424,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                       InkWell(
                         onTap: (){
                           _audioPlayer.stop();
+
                           _con.changeOrderStatus(firebaseOrderResponse.orderid!, "on_going",context);
                         },
                         child: Padding(
@@ -453,7 +463,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
     );
   }
 
-  void _showOnReadyCustomDialog(BuildContext context, int remainingTime) {
+  void _showOnReadyCustomDialog(BuildContext context, int remainingTime, FirebaseOrderResponse firebaseOrderResponse) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -499,6 +509,7 @@ class _DashBoardPageState extends StateMVC<DashBoardPage> {
                           _audioPlayer.stop();
                           Navigator.pop(context);
                           //_con.changeOrderStatus(firebaseOrderResponse.orderid!, "on_going",context);
+                          _con.orderController.updateStatus("");
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

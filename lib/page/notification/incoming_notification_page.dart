@@ -10,8 +10,8 @@ import '../../constants/app_style.dart';
 import '../reject/order_reject_page.dart';
 
 class IncomingNotificationPage extends StatefulWidget {
-  FirebaseOrderResponse firebaseOrderResponse;
-  IncomingNotificationPage(this.firebaseOrderResponse, {super.key});
+
+  IncomingNotificationPage( {super.key});
 
   @override
   State<IncomingNotificationPage> createState() => _IncomingNotificationPageState();

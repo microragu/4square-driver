@@ -1,16 +1,20 @@
 
 
+import 'dart:ui';
+
 import 'package:driver/constants/api_constants.dart';
 import 'package:driver/controller/order_controller.dart';
 import 'package:driver/flutter_flow/flutter_flow_theme.dart';
 import 'package:driver/navigation/page_navigation.dart';
 import 'package:driver/utils/time_utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../../../constants/app_style.dart';
 import '../../../controller/home_controller.dart';
+import '../../../model/firebase/firebase_order_response.dart';
 import 'order_details_page.dart';
 
 class OrderPage extends StatefulWidget {
@@ -20,7 +24,7 @@ class OrderPage extends StatefulWidget {
   _OrderPageState createState() => _OrderPageState();
 }
 
-class _OrderPageState extends StateMVC<OrderPage> {
+class _OrderPageState extends StateMVC<OrderPage> with WidgetsBindingObserver {
 
   late OrderController _con;
 
@@ -35,9 +39,20 @@ class _OrderPageState extends StateMVC<OrderPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      FirebaseOrderResponse   firebaseOrderResponse = FirebaseOrderResponse();
+      firebaseOrderResponse.vendorId = message.data['vendor_id'];
+      firebaseOrderResponse.type = message.data['type'];
+      firebaseOrderResponse.orderid = message.data['orderid'];
+      if(firebaseOrderResponse.type == "on_ready") {
+        _con.listAllOrders("0",shopFocusId);
+      }
+    });
     _con.listAllOrders("0",shopFocusId);
     _con.getShopFocus(context);
   }
+
+
 
   int _selectedIndex = -1;
 
@@ -163,7 +178,9 @@ class _OrderPageState extends StateMVC<OrderPage> {
                               builder: (context) => OrderDetailsPage(orderBean),
                             ),
                           ).then((value){
-                            _con.listAllOrders("0",shopFocusId);
+                             setState(() {
+                             _con.listAllOrders("0",shopFocusId);
+                            });
                           });
                         },
                         child: Stack(
@@ -199,6 +216,10 @@ class _OrderPageState extends StateMVC<OrderPage> {
                                                 TimeUtils.getTimeStampToDate(int.parse(orderBean.paymentTimestamp!)),
                                                 style: AppStyle.font14MediumBlack87.override(fontSize: 14,color: Colors.grey.shade500),
                                               ),
+                                              orderBean.adminforceassigned=="1"  ? Text(
+                                                "Order assigned by admin",
+                                                style: AppStyle.font14MediumBlack87.override(fontSize: 14,color: Colors.green),
+                                              ):Container(),
                                             ],
                                           ),
 
@@ -237,29 +258,35 @@ class _OrderPageState extends StateMVC<OrderPage> {
                                       Divider(
                                         color: Colors.grey.shade500,
                                       ),
-                                      Text(
-                                        "From",
-                                        style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                      ),
-                                      SizedBox(height: 2,),
-                                      Text(
-                                        fromAddress,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Text(
-                                        "To",
-                                        style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
-                                      ),
-                                      SizedBox(height: 2,),
-                                      Text(
-                                        toAddress,maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyle.font18BoldWhite.override(fontSize: 12),
-                                      ),
+                                      orderBean.deliveryState == "on_finish" ?
+                                      Container():Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "From",
+                                            style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                          ),
+                                          SizedBox(height: 2,),
+                                          Text(
+                                            fromAddress,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                          ),
+                                          SizedBox(height: 5,),
+                                          Text(
+                                            "To",
+                                            style: AppStyle.font14MediumBlack87.override(fontSize: 10,color: Colors.grey.shade500),
+                                          ),
+                                          SizedBox(height: 2,),
+                                          Text(
+                                            toAddress,maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.font18BoldWhite.override(fontSize: 12),
+                                          ),
 
+                                        ],
+                                      ),
                                       Divider(
                                         color: Colors.grey.shade500,
                                       ),
@@ -275,7 +302,7 @@ class _OrderPageState extends StateMVC<OrderPage> {
                                               ),
                                               SizedBox(height: 2,),
                                               Text(
-                                                "Mode: "+orderBean.paymentType!,
+                                                "Mode: "+orderBean.paymentType!.toUpperCase(),
                                                 style: AppStyle.font18BoldWhite.override(fontSize: 12,color: Colors.deepOrangeAccent),
                                               ),
                                             ],
